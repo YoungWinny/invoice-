@@ -59,7 +59,7 @@ def delete_invoice(invoice_id):
 @app.route('/clients', methods=['GET'])
 def get_clients():
     cursor = mydb.cursor(dictionary=True)
-    cursor.execute("SELECT * FROM clients")
+    cursor.execute("SELECT * FROM client")
     clients = cursor.fetchall()
     return jsonify(clients)
 
@@ -67,32 +67,32 @@ def get_clients():
 def create_client():
     data = request.json
     cursor = mydb.cursor()
-    cursor.execute("INSERT INTO clients (name, contact, billing_address) VALUES (%s, %s, %s)", (data['name'], data['contact'], data['billing_address']))
+    cursor.execute("INSERT INTO client (name, contact, billing_address) VALUES (%s, %s, %s)", (data['name'], data['contact'], data['billing_address']))
     mydb.commit()
     return jsonify(data), 201
 
 @app.route('/clients/<int:client_id>', methods=['GET'])
 def get_client(client_id):
     cursor = mydb.cursor(dictionary=True)
-    cursor.execute("SELECT * FROM clients WHERE id = %s", (client_id,))
+    cursor.execute("SELECT * FROM client WHERE id = %s", (client_id,))
     client = cursor.fetchone()
     if client:
         return jsonify(client)
     else:
         return jsonify({'message': 'Client not found'}), 404
 
-@app.route('/clients/<int:client_id>', methods=['PUT'])
+@app.route('//<int:client_id>', methods=['PUT'])
 def update_client(client_id):
     data = request.json
     cursor = mydb.cursor()
-    cursor.execute("UPDATE clients SET name = %s, contact = %s, billing_address = %s WHERE id = %s", (data['name'], data['contact'], data['billing_address'], client_id))
+    cursor.execute("UPDATE client SET name = %s, contact = %s, billing_address = %s WHERE id = %s", (data['name'], data['contact'], data['billing_address'], client_id))
     mydb.commit()
     return jsonify(data)
 
 @app.route('/clients/<int:client_id>', methods=['DELETE'])
 def delete_client(client_id):
     cursor = mydb.cursor()
-    cursor.execute("DELETE FROM clients WHERE id = %s", (client_id,))
+    cursor.execute("DELETE FROM client WHERE id = %s", (client_id,))
     mydb.commit()
     return jsonify({'message': 'Client deleted'})
 
